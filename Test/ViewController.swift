@@ -20,9 +20,7 @@ class ViewController: UIViewController {
     }()
     
     @objc func buttonPressed() {
-        
-        let customAlert = CustomAlert()
-        
+        let customAlert = CustomTwo()
         customAlert.showAlert(onViewController: self)
         
     }
@@ -39,88 +37,45 @@ class ViewController: UIViewController {
         ])
         // Do any additional setup after loading the view.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 
 
-
-class FoolishView: UIView {
+class FoolishViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .blue
+        
+        view.addSubview(myButton)
+        
+        NSLayoutConstraint.activate([
+            myButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            myButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+    }
     
     
-    var delegate: foolishDelegate?
+    @objc func cat() {
+        print("Drake")
+        
+    }
     
     let myButton: UIButton = {
         let myButton = UIButton()
-        myButton.setTitle("Button", for: .normal)
+        myButton.setTitle("Drizzy", for: .normal)
         myButton.translatesAutoresizingMaskIntoConstraints = false
         myButton.backgroundColor = .black
         myButton.setTitleColor(.white, for: .normal)
-        myButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        myButton.addTarget(self, action: #selector(cat), for: .touchUpInside)
         return myButton
     }()
     
-    @objc func buttonPressed() {
-        delegate?.dismissPressed()
-        print("if you see her, say hello")
-        
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = .green
-        
-        addSubview(myButton)
-        
-        NSLayoutConstraint.activate([
-            myButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            myButton.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
 
-protocol foolishDelegate {
-    func dismissPressed()
-}
 
-class CustomAlert: foolishDelegate {
-    
-    func dismissPressed() {
-        guard let targetView = myTargetView else {return}
-        
-        UIView.animate(withDuration: 0.25,animations: {
-            self.foolishView.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
-        }) { done in
-            UIView.animate(withDuration: 0.25) {
-                self.backgroundView.alpha = 0
-            } completion: { done in
-                self.foolishView.removeFromSuperview()
-                self.backgroundView.removeFromSuperview()
-            }
-
-        }
-            
-    }
-    
+class CustomTwo {
     
     private let backgroundView: UIView = {
         let backgroundView = UIView()
@@ -129,35 +84,78 @@ class CustomAlert: foolishDelegate {
         return backgroundView
     }()
     
-    
-    private let alertView: UIView = {
-        let alertView = UIView()
-        alertView.backgroundColor = .white
-        alertView.layer.masksToBounds = true
-        alertView.layer.cornerRadius = 12
-        return alertView
-    }()
-    
-    private let foolishView: FoolishView = FoolishView()
-    
-    var myTargetView: UIView?
+    private let foolishViewController = FoolishViewController()
     
     func showAlert(onViewController: UIViewController) {
-        foolishView.delegate = self
         guard let targetView = onViewController.view else { return }
         backgroundView.frame = targetView.bounds
         targetView.addSubview(backgroundView)
+        
         UIView.animate(withDuration: 0.25) {
             self.backgroundView.alpha = 0.6
         }
-        
-        myTargetView = targetView
-        
-        foolishView.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
-        targetView.addSubview(foolishView)
+                
+//      This is apparently called view controller containment -> https://stackoverflow.com/a/27278985/14918173
+        foolishViewController.view.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
+//        targetView.addSubview(foolishViewController)
+        onViewController.addChild(foolishViewController)
+        targetView.addSubview(foolishViewController.view)
         
         UIView.animate(withDuration: 0.25) {
-            self.foolishView.center = targetView.center
+            self.foolishViewController.view.center = targetView.center
         }
     }
 }
+//
+//class CustomAlert: foolishDelegate {
+//    
+//    func dismissPressed() {
+//        
+//        guard let targetView = myTargetView else {return}
+//        
+//        UIView.animate(withDuration: 0.25,animations: {
+//            self.foolishView.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
+//        }) { done in
+//            UIView.animate(withDuration: 0.25) {
+//                self.backgroundView.alpha = 0
+//            } completion: { done in
+//                self.foolishView.removeFromSuperview()
+//                self.backgroundView.removeFromSuperview()
+//            }
+//
+//        }
+//            
+//    }
+//    
+//    
+//    private let backgroundView: UIView = {
+//        let backgroundView = UIView()
+//        backgroundView.backgroundColor = .black
+//        backgroundView.alpha = 0
+//        return backgroundView
+//    }()
+//    
+//    private let foolishViewController = FoolishViewController()
+//    private let foolishView: FoolishView = FoolishView()
+//    
+//    var myTargetView: UIView?
+//    
+//    func showAlert(onViewController: UIViewController) {
+//        foolishView.delegate = self
+//        guard let targetView = onViewController.view else { return }
+//        backgroundView.frame = targetView.bounds
+//        targetView.addSubview(backgroundView)
+//        UIView.animate(withDuration: 0.25) {
+//            self.backgroundView.alpha = 0.6
+//        }
+//        
+//        myTargetView = targetView
+//        
+//        foolishView.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
+//        targetView.addSubview(foolishView)
+//        
+//        UIView.animate(withDuration: 0.25) {
+//            self.foolishView.center = targetView.center
+//        }
+//    }
+//}
