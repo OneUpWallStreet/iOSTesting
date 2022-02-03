@@ -42,6 +42,9 @@ class ViewController: UIViewController {
 
 
 class FoolishViewController: UIViewController {
+    
+    var delegate: customDelegateTwo?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,6 +61,7 @@ class FoolishViewController: UIViewController {
     
     
     @objc func cat() {
+        delegate?.dismissPressed()
         print("Drake")
         
     }
@@ -75,8 +79,30 @@ class FoolishViewController: UIViewController {
 }
 
 
-class CustomTwo {
+protocol customDelegateTwo {
+    func dismissPressed()
+}
+
+class CustomTwo: customDelegateTwo {
     
+    func dismissPressed() {
+
+        guard let targetView = myTargetView else {return}
+
+        UIView.animate(withDuration: 0.25,animations: {
+            self.foolishViewController.view.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
+        }) { done in
+            UIView.animate(withDuration: 0.25) {
+                self.backgroundView.alpha = 0
+            } completion: { done in
+                self.foolishViewController.view.removeFromSuperview()
+                self.backgroundView.removeFromSuperview()
+            }
+
+        }
+
+    }
+
     private let backgroundView: UIView = {
         let backgroundView = UIView()
         backgroundView.backgroundColor = .black
@@ -84,16 +110,22 @@ class CustomTwo {
         return backgroundView
     }()
     
+    var myTargetView: UIView?
+
     private let foolishViewController = FoolishViewController()
     
     func showAlert(onViewController: UIViewController) {
+
         guard let targetView = onViewController.view else { return }
         backgroundView.frame = targetView.bounds
         targetView.addSubview(backgroundView)
-        
+            
+        myTargetView = targetView
         UIView.animate(withDuration: 0.25) {
             self.backgroundView.alpha = 0.6
         }
+        
+        foolishViewController.delegate = self
                 
 //      This is apparently called view controller containment -> https://stackoverflow.com/a/27278985/14918173
         foolishViewController.view.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
