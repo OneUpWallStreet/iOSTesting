@@ -53,8 +53,13 @@ class ViewController: UIViewController {
 
 }
 
+
+
+
 class FoolishView: UIView {
     
+    
+    var delegate: foolishDelegate?
     
     let myButton: UIButton = {
         let myButton = UIButton()
@@ -67,6 +72,7 @@ class FoolishView: UIView {
     }()
     
     @objc func buttonPressed() {
+        delegate?.dismissPressed()
         print("if you see her, say hello")
         
     }
@@ -92,7 +98,29 @@ class FoolishView: UIView {
     
 }
 
-class CustomAlert {
+protocol foolishDelegate {
+    func dismissPressed()
+}
+
+class CustomAlert: foolishDelegate {
+    
+    func dismissPressed() {
+        guard let targetView = myTargetView else {return}
+        
+        UIView.animate(withDuration: 0.25,animations: {
+            self.foolishView.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
+        }) { done in
+            UIView.animate(withDuration: 0.25) {
+                self.backgroundView.alpha = 0
+            } completion: { done in
+                self.foolishView.removeFromSuperview()
+                self.backgroundView.removeFromSuperview()
+            }
+
+        }
+            
+    }
+    
     
     private let backgroundView: UIView = {
         let backgroundView = UIView()
@@ -112,14 +140,18 @@ class CustomAlert {
     
     private let foolishView: FoolishView = FoolishView()
     
+    var myTargetView: UIView?
     
     func showAlert(onViewController: UIViewController) {
+        foolishView.delegate = self
         guard let targetView = onViewController.view else { return }
         backgroundView.frame = targetView.bounds
         targetView.addSubview(backgroundView)
         UIView.animate(withDuration: 0.25) {
             self.backgroundView.alpha = 0.6
         }
+        
+        myTargetView = targetView
         
         foolishView.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
         targetView.addSubview(foolishView)
