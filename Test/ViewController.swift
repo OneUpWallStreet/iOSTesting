@@ -2,192 +2,95 @@
 //  ViewController.swift
 //  Test
 //
-//  Created by Arteezy on 2/3/22.
+//  Created by Arteezy on 2/12/22.
 //
 
 import UIKit
 
 class ViewController: UIViewController {
-
-    let myButton: UIButton = {
-        let myButton = UIButton()
-        myButton.setTitle("Button", for: .normal)
-        myButton.translatesAutoresizingMaskIntoConstraints = false
-        myButton.backgroundColor = .black
-        myButton.setTitleColor(.white, for: .normal)
-        myButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        return myButton
+    
+    let label1: UILabel = {
+        let label1 = UILabel()
+        label1.text = "Amazon Web Services"
+        label1.translatesAutoresizingMaskIntoConstraints = false
+        return label1
     }()
     
-    @objc func buttonPressed() {
-        let customAlert = CustomTwo()
-        customAlert.showAlert(onViewController: self)
+    let secondLabel: UILabel = {
+        let secondLabel = UILabel()
+        secondLabel.text = "Azure Cloud"
+        secondLabel.translatesAutoresizingMaskIntoConstraints = false
+        return secondLabel
+    }()
+    
+    private func initialConfigrationLabel1() {
+        
+        view.addSubview(label1)
+        
+        NSLayoutConstraint.activate([
+            label1.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label1.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
         
     }
     
+    private func initialConfigrationSecondLabel() {
+        
+        view.addSubview(secondLabel)
+        
+        NSLayoutConstraint.activate([
+            secondLabel.topAnchor.constraint(equalTo: label1.bottomAnchor,constant: 10),
+            secondLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    
+    private func resetLabelLayout() {
+        label1.removeFromSuperview()
+
+        NSLayoutConstraint.activate([
+            secondLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            secondLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        
+        self.view.layoutIfNeeded()
+        
+    }
+    
+    @objc func doSomething(){
+        resetLabelLayout()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .purple
-        view.addSubview(myButton)
+        initialConfigrationLabel1()
+        initialConfigrationSecondLabel()
         
-        NSLayoutConstraint.activate([
-            myButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            myButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
+        let addButton = UIBarButtonItem(title: NSLocalizedString("AddTitle", comment: ""),
+                                        style: .plain,
+                                        target: self,
+                                        action: #selector(doSomething))
+        navigationItem.rightBarButtonItem = addButton
+        title = "View"
+        
+//        let button = UIBarButtonItem(
+        
+        view.backgroundColor = .white
+
         // Do any additional setup after loading the view.
     }
-}
-
-
-
-class FoolishViewController: UIViewController {
     
-    var delegate: customDelegateTwo?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .blue
-        
-        view.addSubview(myButton)
-        
-        NSLayoutConstraint.activate([
-            myButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            myButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
-    
-    
-    @objc func cat() {
-        delegate?.dismissPressed()
-        print("Drake")
-        
-    }
-    
-    let myButton: UIButton = {
-        let myButton = UIButton()
-        myButton.setTitle("Drizzy", for: .normal)
-        myButton.translatesAutoresizingMaskIntoConstraints = false
-        myButton.backgroundColor = .black
-        myButton.setTitleColor(.white, for: .normal)
-        myButton.addTarget(self, action: #selector(cat), for: .touchUpInside)
-        return myButton
-    }()
-    
+    */
+
 }
-
-
-protocol customDelegateTwo {
-    func dismissPressed()
-}
-
-class CustomTwo: customDelegateTwo {
-    
-    func dismissPressed() {
-
-        guard let targetView = myTargetView else {return}
-
-        UIView.animate(withDuration: 0.25,animations: {
-            self.foolishViewController.view.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
-        }) { done in
-            UIView.animate(withDuration: 0.25) {
-                self.backgroundView.alpha = 0
-            } completion: { done in
-                self.foolishViewController.view.removeFromSuperview()
-                self.backgroundView.removeFromSuperview()
-            }
-
-        }
-
-    }
-
-    private let backgroundView: UIView = {
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .black
-        backgroundView.alpha = 0
-        return backgroundView
-    }()
-    
-    var myTargetView: UIView?
-
-    private let foolishViewController = FoolishViewController()
-    
-    func showAlert(onViewController: UIViewController) {
-
-        guard let targetView = onViewController.view else { return }
-        backgroundView.frame = targetView.bounds
-        targetView.addSubview(backgroundView)
-            
-        myTargetView = targetView
-        UIView.animate(withDuration: 0.25) {
-            self.backgroundView.alpha = 0.6
-        }
-        
-        foolishViewController.delegate = self
-                
-//      This is apparently called view controller containment -> https://stackoverflow.com/a/27278985/14918173
-        foolishViewController.view.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
-//        targetView.addSubview(foolishViewController)
-        onViewController.addChild(foolishViewController)
-        targetView.addSubview(foolishViewController.view)
-        
-        UIView.animate(withDuration: 0.25) {
-            self.foolishViewController.view.center = targetView.center
-        }
-    }
-}
-//
-//class CustomAlert: foolishDelegate {
-//    
-//    func dismissPressed() {
-//        
-//        guard let targetView = myTargetView else {return}
-//        
-//        UIView.animate(withDuration: 0.25,animations: {
-//            self.foolishView.frame = CGRect(x: 40, y: targetView.frame.size.height, width: targetView.frame.size.width-30, height: 300)
-//        }) { done in
-//            UIView.animate(withDuration: 0.25) {
-//                self.backgroundView.alpha = 0
-//            } completion: { done in
-//                self.foolishView.removeFromSuperview()
-//                self.backgroundView.removeFromSuperview()
-//            }
-//
-//        }
-//            
-//    }
-//    
-//    
-//    private let backgroundView: UIView = {
-//        let backgroundView = UIView()
-//        backgroundView.backgroundColor = .black
-//        backgroundView.alpha = 0
-//        return backgroundView
-//    }()
-//    
-//    private let foolishViewController = FoolishViewController()
-//    private let foolishView: FoolishView = FoolishView()
-//    
-//    var myTargetView: UIView?
-//    
-//    func showAlert(onViewController: UIViewController) {
-//        foolishView.delegate = self
-//        guard let targetView = onViewController.view else { return }
-//        backgroundView.frame = targetView.bounds
-//        targetView.addSubview(backgroundView)
-//        UIView.animate(withDuration: 0.25) {
-//            self.backgroundView.alpha = 0.6
-//        }
-//        
-//        myTargetView = targetView
-//        
-//        foolishView.frame = CGRect(x: 40, y: -300, width: targetView.frame.size.width - 30, height: 300)
-//        targetView.addSubview(foolishView)
-//        
-//        UIView.animate(withDuration: 0.25) {
-//            self.foolishView.center = targetView.center
-//        }
-//    }
-//}
