@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class VC8: UIViewController {
     
     let label1: UILabel = {
         let label1 = UILabel()

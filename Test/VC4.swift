@@ -22,7 +22,7 @@ class VC4: UIViewController {
         
         let imageData = image.pngData()!
         
-        let imageBase64 = imageData.base64EncodedString()
+//        let imageBase64 = imageData.base64EncodedString()
         
         
         let body = ["image": "Hi"]
@@ -47,7 +47,7 @@ class VC4: UIViewController {
              }
              guard let response = response as? HTTPURLResponse,
                  (200...299).contains(response.statusCode) else {
-                     print ("server error \(response)")
+//                     print ("server error \(response)")
                  return
              }
              if let mimeType = response.mimeType,
