@@ -1,13 +1,13 @@
 //
 //  NotificationExtensions.swift
-//  Test
+////  Test
+////
+////  Created by Arteezy on 2/13/22.
+////
 //
-//  Created by Arteezy on 2/13/22.
+//import Foundation
 //
-
-import Foundation
-
-
-extension Notification.Name {
-    static let coinsDidChange = Notification.Name("coinsDidChange")
-}
+//
+//extension Notification.Name {
+//    static let coinsDidChange = Notification.Name("coinsDidChange")
+//}
