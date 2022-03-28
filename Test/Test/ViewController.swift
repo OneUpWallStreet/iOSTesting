@@ -11,22 +11,22 @@ import SwiftUI
 class ViewController: UIViewController {
     
     
-    let progressTestSwiftUIView = UIHostingController(rootView: ProgressTest())
+    let gridTestSwiftUIView = UIHostingController(rootView: GridTest())
  
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        addChild(progressTestSwiftUIView)
-        progressTestSwiftUIView.view.frame = view.frame
-        progressTestSwiftUIView.view.translatesAutoresizingMaskIntoConstraints = false
+        addChild(gridTestSwiftUIView)
+        gridTestSwiftUIView.view.frame = view.frame
+        gridTestSwiftUIView.view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(progressTestSwiftUIView.view)
+        view.addSubview(gridTestSwiftUIView.view)
         
         NSLayoutConstraint.activate([
-            progressTestSwiftUIView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressTestSwiftUIView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressTestSwiftUIView.view.topAnchor.constraint(equalTo: view.topAnchor),
-            progressTestSwiftUIView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            gridTestSwiftUIView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gridTestSwiftUIView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            gridTestSwiftUIView.view.topAnchor.constraint(equalTo: view.topAnchor),
+            gridTestSwiftUIView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
         view.backgroundColor = .yellow
