@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+extension Color {
+    static let challangeBlue = Color("challangeBlue")
+}
+
 struct GridTest: View {
     
     var answers: Array<String> = ["Google Cloud Platform", "Amazon Web Services", "Microsoft Azure","Oracle Cloud", "IBM Cloud"]
@@ -14,19 +18,30 @@ struct GridTest: View {
     var body: some View {
         
         VStack{
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))],spacing: 20){
-                ForEach(answers,id: \.self) { value in
-                    Text(value)
-                }
-            }
             
-//            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))){
-//                ForEach(answers,id: \.self) { value in
-//                    Text(value)
-//                }
-//            }
+            Spacer()
+            ZStack{
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color .challangeBlue)
+                HStack{
+                    Spacer()
+                    Image("home-2")
+                        .resizable()
+                        .frame(width: 40, height: 40, alignment: .center)
+                    
+                    Spacer()
+                    Text("Home")
+                        .font(.title3)
+                        .bold()
+                        .padding(.trailing,30)
+                        .foregroundColor(.white)
+                    Spacer()
+            }
+                
+            }
+            .frame(width: 200, height: 70, alignment: .center)
+            
         }
-        .padding()
 
     }
 }
